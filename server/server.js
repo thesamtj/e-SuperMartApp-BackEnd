@@ -6,7 +6,7 @@ const port = process.env.PORT || 4100;
 // get app 
 const app = express();
 
-const destDir = path.join(__dirname, '../dist');
+const destDir = path.join(__dirname, '../e-SuperMartApp-FrontEnd/dist');
 
 // hosting from dist folder
 app.use(express.static(destDir));
