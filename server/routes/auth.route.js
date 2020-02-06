@@ -1,29 +1,40 @@
 const express = require('express');
 const userCtrl = require('../controllers/user.controller');
 const asyncHandler = require('express-async-handler');
-const bcrypt = require('bcrypt');
+const authController = require('../controllers/auth.controller'); 
 
 const router = express.Router();
 
 // localhost:3000/api/auth/register
-router.post('/register', asyncHandler(insert));
-router.post('/login', asyncHandler(getUserByEmailAndPassword));
+router.post('/register', asyncHandler(insert), login);
+router.post('/login', asyncHandler(getUserByEmailAndPassword), login);
 
 async function insert(req, res, next) {
     const user = req.body;
     console.log('registering user', user);
-    const savedUser = await userCtrl.insert(user);
-    res.json(savedUser);
+    req.savedUser = await userCtrl.insert(user);
+    
+	next();
 }
 
 async function getUserByEmailAndPassword(req, res, next) {
     const user = req.body;
     console.log('searching user for', user);
-    const savedUser = await userCtrl.getUserByEmailAndPassword(
+    req.savedUser = await userCtrl.getUserByEmailAndPassword(
         user.email,
         user.password
         );
-    res.json(savedUser);
+    
+	next();
+}
+
+function login(req, res) {
+    const user = req.savedUser;
+    const token = authController.generateToken(user);
+    res.json({
+        user,
+        token
+    }); 
 }
 
 

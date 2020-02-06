@@ -3,6 +3,7 @@ const envVars = process.env;
 
 module.exports = {
     port: envVars.PORT,
+	jwtSecret: envVars.JWT_SECRET,
     env: envVars.NODE_ENV,
     mongo: {
         uri: envVars.MONGODB_URI,
